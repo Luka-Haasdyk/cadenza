@@ -70,8 +70,6 @@ export default function SpotifyPlayer({ token, currentTrack, setCurrentTrack, se
 
   return (
     <div className="flex flex-col items-center space-y-4 mt-4">
-      <h2 className="text-2xl font-bold">Spotify Player</h2>
-
       {/* Display Current Track */}
       {currentTrack && (
         <div className="text-center">

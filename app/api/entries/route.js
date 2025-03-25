@@ -12,12 +12,12 @@ export async function POST(req) {
   try {
     const body = await req.json();
 
-    const { text, id, track } = body;
+    const { title, text, id, track } = body;
     const date = new Date();
 
     const result = await pool.query(
-      "INSERT INTO entries (id, text, track, date) VALUES ($1, $2, $3, $4) RETURNING *",
-      [id, text, track, date]
+      "INSERT INTO entries (id, title, text, track, date) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [id, title , text, track, date]
     );
 
     // Return the inserted data with a 201 status

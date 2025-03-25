@@ -43,7 +43,7 @@ export async function GET(request) {
     console.log('Access Token:', access_token); // Debugging: Log the access token
 
     // Redirect to the frontend with the access token
-    const frontendUrl = `http://localhost:3000/?access_token=${access_token}`;
+    const frontendUrl = `http://localhost:3000/EntryArea?access_token=${access_token}`;
     console.log('Redirecting to Frontend:', frontendUrl); // Debugging: Log the frontend URL
     return NextResponse.redirect(frontendUrl);
   } catch (error) {
