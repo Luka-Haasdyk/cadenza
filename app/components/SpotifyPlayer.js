@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-export default function SpotifyPlayer({ token, currentTrack, setCurrentTrack, setDeviceId }) {
+export default function SpotifyPlayer({
+  token,
+  currentTrack,
+  setCurrentTrack,
+  setDeviceId,
+}) {
   const [player, setPlayer] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
@@ -17,7 +22,7 @@ export default function SpotifyPlayer({ token, currentTrack, setCurrentTrack, se
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
-        name: "Yournal Player",
+        name: "Cadenza Player",
         getOAuthToken: (cb) => {
           cb(token);
         },
@@ -63,7 +68,9 @@ export default function SpotifyPlayer({ token, currentTrack, setCurrentTrack, se
     };
 
     return () => {
-      if (player) player.disconnect();
+      if (player) {
+        player.disconnect();
+      }
       document.body.removeChild(script);
     };
   }, [token]);

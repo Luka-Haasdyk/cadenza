@@ -2,8 +2,13 @@
 
 import { useState, useEffect } from "react";
 import SpotifyPlayer from "./SpotifyPlayer";
+import { useAuth } from "../context/AuthContext";
+import { useSearchParams } from "next/navigation";
 
 export default function EntryArea() {
+  const { token, isAuthenticated, login } = useAuth();
+  const searchParams = useSearchParams();
+
   // Variables for Entries
   const [entryText, setEntryText] = useState("");
   const [entryTitle, setEntryTitle] = useState("");
@@ -14,17 +19,13 @@ export default function EntryArea() {
   const [currentTrack, setCurrentTrack] = useState(null);
 
   // Variables for SpotifyPlayer authentication and connection
-  const [token, setToken] = useState(null);
   const [deviceId, setDeviceId] = useState(null);
 
   useEffect(() => {
-    // Extract the access_token from the URL query parameters
-    const queryParams = new URLSearchParams(window.location.search);
-    const accessToken = queryParams.get("access_token");
-
-    if (accessToken) {
-      setToken(accessToken);
-      // Clear the access_token from the URL
+    const urlToken = searchParams.get('access_token');
+    if (urlToken && !isAuthenticated) {
+      login(urlToken); // Save token to context
+      // Clean the URL
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
@@ -89,9 +90,14 @@ export default function EntryArea() {
       id: Math.random().toString(36),
       title: entryTitle,
       text: entryText,
-      track: currentTrack?.uri || null, // Added null check
+      track: currentTrack?.uri || null,
+      track_name: currentTrack?.name || null,  // snake_case
+      track_artist: currentTrack?.artists?.[0]?.name || null,  // snake_case with optional chaining
+      track_image: currentTrack?.album?.images?.[0]?.url || null,  // snake_case with optional chaining
       date: new Date().toISOString(),
     };
+
+    console.log("Saving entry:", entryData);
 
     try {
       const response = await fetch("/api/entries", {
@@ -193,7 +199,7 @@ export default function EntryArea() {
 
       {/* Right Section (Spotify Search and Player) */}
       <div className="w-1/3 bg-white p-5 rounded-lg shadow-lg flex flex-col">
-        {token ? (
+        {isAuthenticated ? (
           <>
             {/* Search Input and Button */}
             <input

@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check for token in localStorage when app loads
+    // Check for token in localStorage
     const storedToken = localStorage.getItem("spotify_token");
     if (storedToken) {
       setToken(storedToken);
@@ -30,7 +30,15 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        isAuthenticated,
+        login,
+        logout,
+        setToken, // Add this for the callback page
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
